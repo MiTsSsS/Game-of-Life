@@ -2,14 +2,14 @@
 #include <format>
 #include <random>
 #include <chrono>
+#include <windows.h>
 #include <vector>
-#include <typeinfo>
 
 //Displays the grid on screen
 void displayGrid(std::vector<std::vector<int>> grid) {
 	for (int i = 0; i < grid.size(); i++) {
 		for (int j = 0; j < grid[i].size(); j++) {
-			std::cout << std::format("|{:^5}", grid[i][j]);
+			std::cout << std::format("|{:^5}", grid[i][j] == 1 ? '*' : ' ');
 
 		}
 
@@ -103,7 +103,7 @@ std::vector<std::vector<int>> populateGrid(int rowAmnt, int colAmnt) {
 //Processes the conditions to determine the status of the current cell based on the number of its live neighbooring cells
 int processCell(int liveNeighboors, bool isCellAlive) {
 
-	std::cout << "Live neighboors cells: " << liveNeighboors << std::endl;
+	//std::cout << "Live neighboors cells: " << liveNeighboors << std::endl;
 	if(isCellAlive) {
 		if(liveNeighboors < 2) {
 			return 0;
@@ -137,7 +137,7 @@ int processCell(int liveNeighboors, bool isCellAlive) {
 int countNeighbooringCellsValue(std::vector<std::vector<int>> grid, int x, int y) {
 	int liveNeighboorCellCount{ 0 };
 
-	std::cout << "i: " << x << " j: " << y << std::endl;
+	//std::cout << "i: " << x << " j: " << y << std::endl;
 
 	//Iterate through all neighboors
 	for (int i = x - 1; i <= x + 1; i++) {
@@ -157,7 +157,7 @@ int countNeighbooringCellsValue(std::vector<std::vector<int>> grid, int x, int y
 	return liveNeighboorCellCount;
 }
 
-std::vector<std::vector<int>> iterateGrid(std::vector<std::vector<int>> grid, std::vector<std::vector<int>> resultGrid, int row, int col) {
+void iterateGrid(std::vector<std::vector<int>> grid, std::vector<std::vector<int>> resultGrid, int row, int col) {
 	int generationAmnt{ 0 }, generationCounter{ 0 };
 	bool isCurrentCellAlive{ false };
 
@@ -175,12 +175,20 @@ std::vector<std::vector<int>> iterateGrid(std::vector<std::vector<int>> grid, st
 		}
 
 		generationCounter++;
+		grid = resultGrid;
+
+		//Clearing the int vectors
+		for (int i = 0; i < col; i++) {
+			resultGrid[i].clear();
+
+		}
+
 		std::cout << "Current Generation: " << generationCounter << std::endl;
+
+		Sleep(800);
+		system("cls");
 		displayGrid(grid);
-
 	}
-
-	return resultGrid;
 }
 
 int main() {
@@ -192,6 +200,6 @@ int main() {
 
 	std::vector<std::vector<int>> grid = populateGrid(rowAmnt, colAmnt);
 	std::vector<std::vector<int>> resultGrid = prepareNextGenGrid(rowAmnt);
-	resultGrid = iterateGrid(grid, resultGrid, rowAmnt, colAmnt);
+	iterateGrid(grid, resultGrid, rowAmnt, colAmnt);
 
 }
