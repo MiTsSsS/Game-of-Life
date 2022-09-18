@@ -1,15 +1,16 @@
 #include <iostream>
+#include <SFML/Graphics.hpp>
 #include <format>
 #include <random>
 #include <chrono>
-#include <windows.h>
 #include <vector>
+#include <windows.h>
 
 //Displays the grid on screen
 void displayGrid(std::vector<std::vector<int>> grid) {
 	for (int i = 0; i < grid.size(); i++) {
 		for (int j = 0; j < grid[i].size(); j++) {
-			std::cout << std::format("|{:^5}", grid[i][j] == 1 ? '*' : ' ');
+			std::cout << std::format("|{:^5}", grid[i][j]);
 
 		}
 
@@ -31,7 +32,7 @@ std::vector<std::vector<int>> prepareNextGenGrid(int rowAmnt) {
 	return nextGenGrid;
 }
 
-//Populates the grid with randomized 1 and 0 values, size of grid is inputted by the user
+//Populates the grid with randomized 1 (populated) and 0 (unpopulated) values, size of grid is entered by the user
 std::vector<std::vector<int>> populateGrid(int rowAmnt, int colAmnt) {
 	std::vector<std::vector<int>> grid;
 
@@ -201,5 +202,25 @@ int main() {
 	std::vector<std::vector<int>> grid = populateGrid(rowAmnt, colAmnt);
 	std::vector<std::vector<int>> resultGrid = prepareNextGenGrid(rowAmnt);
 	iterateGrid(grid, resultGrid, rowAmnt, colAmnt);
+
+	sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
+	sf::CircleShape shape(100.f);
+	shape.setFillColor(sf::Color::Green);
+
+	while (window.isOpen())
+	{
+		sf::Event event;
+		while (window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+				window.close();
+		}
+
+		window.clear();
+		window.draw(shape);
+		window.display();
+	}
+
+	return 0;
 
 }
