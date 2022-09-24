@@ -4,6 +4,7 @@
 #include <random>
 #include <chrono>
 #include <vector>
+#include <string>
 #include <windows.h>
 
 //Displays the grid on screen
@@ -138,7 +139,7 @@ int processCell(int liveNeighboors, bool isCellAlive) {
 int countNeighbooringCellsValue(std::vector<std::vector<int>> grid, int x, int y) {
 	int liveNeighboorCellCount{ 0 };
 
-	//std::cout << "i: " << x << " j: " << y << std::endl;
+	std::cout << "i: " << x << " j: " << y << std::endl;
 
 	//Iterate through all neighboors
 	for (int i = x - 1; i <= x + 1; i++) {
@@ -158,7 +159,9 @@ int countNeighbooringCellsValue(std::vector<std::vector<int>> grid, int x, int y
 	return liveNeighboorCellCount;
 }
 
-void iterateGrid(std::vector<std::vector<int>> grid, std::vector<std::vector<int>> resultGrid, int row, int col) {
+void iterateGrid(std::vector<std::vector<int>> grid, std::vector<std::vector<int>> resultGrid, int row, int col, sf::Sprite graySprite, sf::Sprite blackSprite) {
+	sf::RenderWindow window(sf::VideoMode(1920, 1080), "SFML works!");
+
 	int generationAmnt{ 0 }, generationCounter{ 0 };
 	bool isCurrentCellAlive{ false };
 
@@ -186,26 +189,40 @@ void iterateGrid(std::vector<std::vector<int>> grid, std::vector<std::vector<int
 
 		std::cout << "Current Generation: " << generationCounter << std::endl;
 
-		Sleep(800);
-		system("cls");
+		Sleep(600);
+		window.clear();
+
+		//Testing SFML
 		displayGrid(grid);
-	}
-}
+		for (int i = 0; i < grid.size(); i++) {
+			for (int j = 0; j < grid[i].size(); j++) {
+				
+				//std::cout << std::format("|{:^5}", grid[i][j]
+				sf::Sprite tempSprite;
 
-int main() {
-	int rowAmnt{ 0 }, colAmnt{ 0 };
+				if (grid[i][j] == 0) {
+					tempSprite = blackSprite;					
 
-	std::cout << "Enter row and col amount: ";
-	std::cin >> rowAmnt >> colAmnt;
-	std::cout << std::endl;
+				}
 
-	std::vector<std::vector<int>> grid = populateGrid(rowAmnt, colAmnt);
-	std::vector<std::vector<int>> resultGrid = prepareNextGenGrid(rowAmnt);
-	iterateGrid(grid, resultGrid, rowAmnt, colAmnt);
+				else {
+					tempSprite = graySprite;
+					
+				}
+				//std::cout << "64 * j = " << 64 * j << " 64 * i = " << 64 * i << std::endl;
 
-	sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-	sf::CircleShape shape(100.f);
-	shape.setFillColor(sf::Color::Green);
+				tempSprite.setPosition(64 * j, 64 * i);
+
+				window.draw(tempSprite);
+				std::cout << "draw" << std::endl;
+
+			}
+
+			//std::cout << "|" << std::endl;
+		}
+		window.display();
+		//std::cout << std::endl;
+	}	
 
 	while (window.isOpen())
 	{
@@ -216,11 +233,61 @@ int main() {
 				window.close();
 		}
 
-		window.clear();
-		window.draw(shape);
-		window.display();
+		//window.clear();
+	}
+}
+
+sf::Sprite initializeSpriteFromTexture(std::string textureName) {
+	sf::Texture texture;
+
+	if (!texture.loadFromFile(textureName)) {
+		std::cout << "ERROR INITIALIZING TEXTURE FILE " + textureName << std::endl;
+
 	}
 
-	return 0;
+	sf::Sprite sprite;
+	sprite.setTexture(texture);
 
+	return sprite;
+}
+
+int main() {
+	int rowAmnt{ 0 }, colAmnt{ 0 };
+	
+	std::cout << "Enter row and col amount: ";
+	std::cin >> rowAmnt >> colAmnt;
+	std::cout << std::endl;
+
+	sf::Texture grayCellTexture;
+	sf::Texture blackCellTexture;
+
+	std::string grayTextureFile;
+	std::string blackTextureFile;
+
+	grayTextureFile = "GrayCell.png";
+	blackTextureFile = "BlackCell.png";
+
+	if (!grayCellTexture.loadFromFile(grayTextureFile)) {
+		std::cout << "TEXTURE FILE " + grayTextureFile + " NOT FOUND." << std::endl;
+
+	}
+
+	if (!blackCellTexture.loadFromFile(blackTextureFile)) {
+		std::cout << "TEXTURE FILE " + blackTextureFile + " NOT FOUND." << std::endl;
+
+	}
+
+	sf::Sprite grayCellSprite;// = initializeSpriteFromTexture("GrayCell.png");
+	sf::Sprite blackCellSprite;// = initializeSpriteFromTexture("BlackCell.png");
+	grayCellSprite.setTexture(grayCellTexture);
+
+	//sf::Sprite blackCellSprite;
+	blackCellSprite.setTexture(blackCellTexture);
+
+	std::vector<std::vector<int>> grid = populateGrid(rowAmnt, colAmnt);
+	std::vector<std::vector<int>> resultGrid = prepareNextGenGrid(rowAmnt);
+
+	iterateGrid(grid, resultGrid, rowAmnt, colAmnt, grayCellSprite, blackCellSprite);
+
+	return 0;
 }
