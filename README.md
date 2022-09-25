@@ -1,3 +1,6 @@
+![Languages](https://img.shields.io/badge/-C++-%2303a9f4?style=for-the-badge&logo=cplusplus) 
+![SFML](https://img.shields.io/badge/SFML-green?style=for-the-badge&logo=sfml)
+
 # Introduction
 
 This project is a simple implementation of John Conway's "Game of Life".   
