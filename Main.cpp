@@ -188,7 +188,6 @@ void iterateGrid(std::vector<std::vector<int>> grid, std::vector<std::vector<int
 		for (int i = 0; i < row; i++) {
 			for (int j = 0; j < col; j++) {
 				int currentCellNeighboorsAmnt = countNeighbooringCellsValue(grid, i, j);
-
 				resultGrid[i].push_back(processCell(currentCellNeighboorsAmnt, grid[i][j]));
 
 			}
@@ -198,7 +197,7 @@ void iterateGrid(std::vector<std::vector<int>> grid, std::vector<std::vector<int
 		grid = resultGrid;
 
 		//Clearing the int vectors
-		for (int i = 0; i < col; i++) {
+		for (int i = 0; i < row; i++) {
 			resultGrid[i].clear();
 
 		}
