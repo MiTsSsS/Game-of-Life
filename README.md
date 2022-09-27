@@ -10,7 +10,7 @@ This project is a simple implementation of John Conway's "Game of Life".
 # How to use
 This project requires C++20 and SFML (Simple and Fast Multimedia Library)
   
-[How to setup SFML](https://www.sfml-dev.org/tutorials/2.5/start-vc.php)
+- [How to setup SFML](https://www.sfml-dev.org/tutorials/2.5/start-vc.php)
   
 # I have everything setup, now what?
 Run the code, enter the size of your grid and the number of generations, and watch it do its magic!
