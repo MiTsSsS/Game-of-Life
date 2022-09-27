@@ -1,1 +1,0 @@
-- Was fixing crash where if the number of columns > rows, the app crashes.
